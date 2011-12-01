@@ -1,0 +1,34 @@
+diff -urNp ncompress-4.2.4-orig/compress42.c ncompress-4.2.4/compress42.c
+--- ncompress-4.2.4-orig/compress42.c	2008-12-01 13:50:17.000000000 +0100
++++ ncompress-4.2.4/compress42.c	2008-12-01 13:53:03.000000000 +0100
+@@ -132,6 +132,7 @@
+  */
+ #include	<unistd.h>
+ #include	<stdio.h>
++#include  <stdlib.h>
+ #include	<fcntl.h>
+ #include	<ctype.h>
+ #include	<signal.h>
+@@ -696,7 +697,13 @@ main(argc, argv)
+             }
+         }
+ 
+-        filelist = fileptr = (char **)malloc(argc*sizeof(char *));
++        filelist = (char **)malloc(argc*sizeof(char *));
++        if (filelist == NULL)
++          {
++             fprintf(stderr, "Cannot allocate memory for file list.\n");
++             exit (1);
++          }
++        fileptr = filelist;
+     	*filelist = NULL;
+ 
+     	if((progname = rindex(argv[0], '/')) != 0)
+@@ -836,6 +843,7 @@ nextarg:	continue;
+ 				decompress(0, 1);
+ 		}
+         
++    free(filelist);
+ 		exit((exit_code== -1) ? 1:exit_code);
+                 return 0;
+ 	}
